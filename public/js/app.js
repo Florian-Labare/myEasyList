@@ -2257,21 +2257,23 @@ function jxhr(obj, url, onSuccess, onError, method, async) {
   \*****************************************************************/
 /***/ (() => {
 
-var inputs = document.getElementsByName('products[]');
-var selectAll = document.getElementById('selectAll');
-var deselectAll = document.getElementById('deselectAll');
-var selects = function selects() {
-  for (var i = 0; i < inputs.length; i++) {
-    if (inputs[i].type == 'checkbox') inputs[i].checked = true;
-  }
-};
-var deSelect = function deSelect() {
-  for (var i = 0; i < inputs.length; i++) {
-    if (inputs[i].type == 'checkbox') inputs[i].checked = false;
-  }
-};
-selectAll.addEventListener('click', selects);
-deselectAll.addEventListener('click', deSelect);
+document.addEventListener("DOMContentLoaded", function (e) {
+  var inputs = document.getElementsByName('products[]');
+  var selectAll = document.getElementById('selectAll');
+  var deselectAll = document.getElementById('deselectAll');
+  var selects = function selects() {
+    for (var i = 0; i < inputs.length; i++) {
+      if (inputs[i].type == 'checkbox') inputs[i].checked = true;
+    }
+  };
+  var deSelect = function deSelect() {
+    for (var i = 0; i < inputs.length; i++) {
+      if (inputs[i].type == 'checkbox') inputs[i].checked = false;
+    }
+  };
+  selectAll.addEventListener('click', selects);
+  deselectAll.addEventListener('click', deSelect);
+});
 
 /***/ }),
 
