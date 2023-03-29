@@ -1,0 +1,5 @@
+@import "activeTab.css";
+@import "productsInList.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
