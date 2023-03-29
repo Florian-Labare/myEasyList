@@ -174,5 +174,10 @@
     </div>
 @endif
 </section>
+<script>
+    setTimeout(() => {
+        document.getElementById("success-create-product").classList.add('hidden')
+    }, 3000);
+</script>
 @endsection
 
