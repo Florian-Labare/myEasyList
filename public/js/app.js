@@ -2103,48 +2103,76 @@ document.addEventListener("DOMContentLoaded", function (e) {
 function getElementByProductId(label, productId) {
   return document.getElementById(label + '_' + productId);
 }
-document.addEventListener("DOMContentLoaded", function (e) {
-  var referenceDays = document.querySelectorAll('[data-product]');
-  document.getElementById('success-output').classList.add('hidden');
+var referenceDays = document.querySelectorAll('[data-product]');
+document.getElementById('success-output').classList.add('hidden');
 
-  // set reference validity days in list
-  Array.from(referenceDays).forEach(function (item) {
-    item.addEventListener('click', addReferenceDays);
-  });
-  Array.from(referenceDays).forEach(function (item) {
-    if (item.dataset['status'] === "OK") {
-      item.classList.add('hidden');
-    }
-  });
-  function addReferenceDays(e) {
-    var request = new XMLHttpRequest();
-    var productId = e.target.dataset['product'];
-    var outputStatusChange = getElementByProductId('output-status-change', productId);
-    var outputRemainingDayChange = getElementByProductId('output-remaining-day-change', productId);
-    var buttonAddReferenceDays = getElementByProductId('addReferenceDays', productId);
-    var output = document.getElementById('success-output');
-    request.open("POST", e.target.dataset['url'], true);
-    request.onload = function () {
-      var parse = JSON.parse(request.response);
-      output.classList.remove('hidden');
-      if (parse.product_status === "OK") {
-        outputStatusChange.classList.remove('bg-orange-300/60');
-        outputStatusChange.classList.remove('bg-red-300/60');
-        outputStatusChange.classList.add('bg-emerald-300/60');
-      }
-      setTimeout(function () {
-        output.innerHTML = "Error : Time out";
-        output.classList.add('hidden');
-      }, 3000);
-      buttonAddReferenceDays.classList.add('hidden');
-      output.innerHTML = request.status === 200 ? e.target.dataset['name'] + " modifié avec succès" : "Error ".concat(request.status, " occurred when trying to send data.<br />");
-      outputStatusChange.innerHTML = request.status === 200 ? parse.product_status : "Error ".concat(request.status, " occurred when trying to send product status.<br />");
-      outputRemainingDayChange.innerHTML = request.status === 200 ? parse.remaining_day : "Error ".concat(request.status, " occurred when trying to send remaining day.<br />");
-    };
-    request.send(e.target);
-    e.preventDefault();
+// set reference validity days in list
+Array.from(referenceDays).forEach(function (item) {
+  item.addEventListener('click', addReferenceDays);
+});
+Array.from(referenceDays).forEach(function (item) {
+  if (item.dataset['status'] === "OK") {
+    item.classList.add('hidden');
   }
 });
+function addReferenceDays(e) {
+  var request = new XMLHttpRequest();
+  var productId = e.target.dataset['product'];
+  var outputStatusChange = getElementByProductId('output-status-change', productId);
+  var outputRemainingDayChange = getElementByProductId('output-remaining-day-change', productId);
+  var buttonAddReferenceDays = getElementByProductId('addReferenceDays', productId);
+  var output = document.getElementById('success-output');
+  request.open("POST", e.target.dataset['url'], true);
+  request.onload = function () {
+    var parse = JSON.parse(request.response);
+    output.classList.remove('hidden');
+    if (parse.product_status === "OK") {
+      outputStatusChange.classList.remove('bg-orange-300/60');
+      outputStatusChange.classList.remove('bg-red-300/60');
+      outputStatusChange.classList.add('bg-emerald-300/60');
+    }
+    setTimeout(function () {
+      output.innerHTML = "Error : Time out";
+      output.classList.add('hidden');
+    }, 3000);
+    buttonAddReferenceDays.classList.add('hidden');
+    output.innerHTML = request.status === 200 ? e.target.dataset['name'] + " modifié avec succès" : "Error ".concat(request.status, " occurred when trying to send data.<br />");
+    outputStatusChange.innerHTML = request.status === 200 ? parse.product_status : "Error ".concat(request.status, " occurred when trying to send product status.<br />");
+    outputRemainingDayChange.innerHTML = request.status === 200 ? parse.remaining_day : "Error ".concat(request.status, " occurred when trying to send remaining day.<br />");
+  };
+  request.send(e.target);
+  e.preventDefault();
+}
+
+/***/ }),
+
+/***/ "./resources/js/Product/deleteProduct.js":
+/*!***********************************************!*\
+  !*** ./resources/js/Product/deleteProduct.js ***!
+  \***********************************************/
+/***/ (() => {
+
+var elementsToDelete = document.querySelectorAll('[data-productid]');
+Array.from(elementsToDelete).forEach(function (item) {
+  item.addEventListener('click', deleteProduct);
+});
+function deleteProduct(e) {
+  var outputDelete = document.querySelector("#output-message-delete");
+  var request = new XMLHttpRequest();
+  request.open("POST", e.target.dataset['urldelete'], true);
+  request.onload = function () {
+    var productLine = document.getElementById('product-line_' + e.target.dataset['productid']);
+    productLine.remove();
+    outputDelete.classList.remove('hidden');
+    setTimeout(function () {
+      outputDelete.innerHTML = "Error : Time out";
+      outputDelete.classList.add('hidden');
+    }, 3000);
+    outputDelete.innerHTML = request.status === 200 ? "Produit supprimé avec succès" : "Error ".concat(request.status, " un probl\xE8me est survenu lors de la suppression.<br />");
+  };
+  request.send(e.target);
+  e.preventDefault();
+}
 
 /***/ }),
 
@@ -2229,23 +2257,21 @@ function jxhr(obj, url, onSuccess, onError, method, async) {
   \*****************************************************************/
 /***/ (() => {
 
-document.addEventListener("DOMContentLoaded", function (e) {
-  var inputs = document.getElementsByName('products[]');
-  var selectAll = document.getElementById('selectAll');
-  var deselectAll = document.getElementById('deselectAll');
-  var selects = function selects() {
-    for (var i = 0; i < inputs.length; i++) {
-      if (inputs[i].type == 'checkbox') inputs[i].checked = true;
-    }
-  };
-  var deSelect = function deSelect() {
-    for (var i = 0; i < inputs.length; i++) {
-      if (inputs[i].type == 'checkbox') inputs[i].checked = false;
-    }
-  };
-  selectAll.addEventListener('click', selects);
-  deselectAll.addEventListener('click', deSelect);
-});
+var inputs = document.getElementsByName('products[]');
+var selectAll = document.getElementById('selectAll');
+var deselectAll = document.getElementById('deselectAll');
+var selects = function selects() {
+  for (var i = 0; i < inputs.length; i++) {
+    if (inputs[i].type == 'checkbox') inputs[i].checked = true;
+  }
+};
+var deSelect = function deSelect() {
+  for (var i = 0; i < inputs.length; i++) {
+    if (inputs[i].type == 'checkbox') inputs[i].checked = false;
+  }
+};
+selectAll.addEventListener('click', selects);
+deselectAll.addEventListener('click', deSelect);
 
 /***/ }),
 
@@ -2262,6 +2288,7 @@ __webpack_require__(/*! ./tabs */ "./resources/js/tabs.js");
 __webpack_require__(/*! ./Product/selectOrDeslectProductsCheckBox */ "./resources/js/Product/selectOrDeslectProductsCheckBox.js");
 __webpack_require__(/*! ./Product/addProductsInList */ "./resources/js/Product/addProductsInList.js");
 __webpack_require__(/*! ./Product/addReferenceValidityDays */ "./resources/js/Product/addReferenceValidityDays.js");
+__webpack_require__(/*! ./Product/deleteProduct */ "./resources/js/Product/deleteProduct.js");
 
 /***/ }),
 

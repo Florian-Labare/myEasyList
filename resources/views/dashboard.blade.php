@@ -33,7 +33,7 @@
     <div class="p-6 pl-6 bg-white-100 flex items-center justify-center">
         <div class="grid xl:grid-cols-4 lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 gap-4 md:justify-items-center">
             @foreach($lists as $list)
-                <a href="@if(empty($list->products_data)) # @else{{ route('list.show', ['listId' => $list->id]) }} @endif" class="sm:grid-cols-1 flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700 p-4 mr-3 mb-3 w-96 justify-between">
+                <a href="{{ route('list.show', ['listId' => $list->id]) }}" class="sm:grid-cols-1 flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700 p-4 mr-3 mb-3 w-96 justify-between">
                     <div class="flex flex-col justify-between p-4 leading-normal">
                         <h5 class="mb-2 text-2xl tracking-tight text-gray-900 dark:text-white">{{$list->title}}</h5>
                     </div>
@@ -50,6 +50,7 @@
                             </button>
                         </form>
                         <form action="{{ route('list.destroy', ['listId' => $list->id]) }}" method="POST" class="mt-1 ml-2">
+                            @csrf
                             <button type="submit" class="mt-4">
                                 <i>
                                     <svg class="h-6 w-6 text-grey-600"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">

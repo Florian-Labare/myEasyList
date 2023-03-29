@@ -20,6 +20,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::get('/progress-bar/category/{categoryId}/product/{productId}', [ProductController::class, 'getProgressBarPercent'])->name('category-product-progress');
+Route::post('/category/{categoryId}/product/{productId}/destroy', [ProductController::class, 'destroy'])->name('product.destroy');
 Route::prefix('product')->group(function() {
 
     Route::prefix('{productId}')->group(function() {
