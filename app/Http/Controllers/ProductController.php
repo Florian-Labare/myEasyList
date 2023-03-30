@@ -48,12 +48,12 @@ class ProductController extends Controller
         $product =  null;
         if (empty($categoryId)) {
             $request->validate([
-                'products.*' => 'required|regex:/^([a-zA-Z0-9'.HelperAccent::ACCENT_LETTERS.']+)(\s[a-zA-Z0-9'.HelperAccent::ACCENT_LETTERS.']+)*$/|unique:products,name,NULL,id,deleted_at,NULL',
+                'products.*' => 'required|string|distinct|min:3|regex:/^([a-zA-Z0-9'.HelperAccent::ACCENT_LETTERS.']+)(\s[a-zA-Z0-9'.HelperAccent::ACCENT_LETTERS.']+)*$/|unique:products,name,NULL,id,deleted_at,NULL',
                 'category' => 'required|exists:categories,id',
             ]);
         } else {
             $request->validate([
-                'products.*' => 'required|regex:/^([a-zA-Z0-9'.HelperAccent::ACCENT_LETTERS.']+)(\s[a-zA-Z0-9'.HelperAccent::ACCENT_LETTERS.']+)*$/|unique:products,name,NULL,id,deleted_at,NULL',
+                'products.*' => 'required|string|distinct|regex:/^([a-zA-Z0-9'.HelperAccent::ACCENT_LETTERS.']+)(\s[a-zA-Z0-9'.HelperAccent::ACCENT_LETTERS.']+)*$/|unique:products,name,NULL,id,deleted_at,NULL',
             ]);
         }
 
@@ -176,7 +176,7 @@ class ProductController extends Controller
      * @param int $productId
      * @return JsonResponse
      */
-    public function addReferenceValidityDays(int $productId)
+    public function addReferenceValidityDays(int $productId) : JsonResponse
     {
         $product = Product::findById($productId);
         if(empty($product)){
@@ -199,7 +199,7 @@ class ProductController extends Controller
      * @param int $productId
      * @return JsonResponse
      */
-    public function getProgressBarPercent(int $categoryId, int $productId)
+    public function getProgressBarPercent(int $categoryId, int $productId) : JsonResponse
     {
         $product = null;
         $products = Category::findById($categoryId)->products()->get();

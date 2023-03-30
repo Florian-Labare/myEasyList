@@ -63,4 +63,26 @@ class CategoryController extends Controller
         return redirect()->route('home');
     }
 
+    /**
+     * @param int $categoryId
+     * @return \Illuminate\Http\JsonResponse|void
+     */
+    public function deleteAllCategoryProducts(int $categoryId)
+    {
+        $category = Category::findById($categoryId);
+
+        if(empty($category)) {
+
+            return response()->json(['error' => 'Aucune catégorie n\'a été trouvée']);
+        }
+
+        $products = $category->products()->get();
+        foreach ($products as $product) {
+            $product->delete();
+        }
+
+        return response()->json(['success' => 'produits supprimés']);
+
+    }
+
 }

@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ListController;
+use App\Http\Controllers\CategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,8 +20,12 @@ use App\Http\Controllers\ListController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::get('/progress-bar/category/{categoryId}/product/{productId}', [ProductController::class, 'getProgressBarPercent'])->name('category-product-progress');
+
+Route::post('/category/{categoryId}/delete-products', [CategoryController::class, 'deleteAllCategoryProducts'])->name('delete-all-category-products');
+Route::delete('/category/{categoryId}/hello', [CategoryController::class, 'hello'])->name('hello');
+Route::get('/category/{categoryId}/product/{productId}/progress-bar', [ProductController::class, 'getProgressBarPercent'])->name('category-product-progress');
 Route::post('/category/{categoryId}/product/{productId}/destroy', [ProductController::class, 'destroy'])->name('product.destroy');
+
 Route::prefix('product')->group(function() {
 
     Route::prefix('{productId}')->group(function() {

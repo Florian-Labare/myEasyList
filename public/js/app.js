@@ -2157,35 +2157,34 @@ document.addEventListener("DOMContentLoaded", function (e) {
 document.addEventListener("DOMContentLoaded", function (e) {
   var elementsToDelete = document.querySelectorAll('[data-productid]');
   var deleteAllButton = document.getElementById("delete-all");
-  console.log(elementsToDelete);
   Array.from(elementsToDelete).forEach(function (item) {
     item.addEventListener('click', deleteProduct);
   });
-  function deleteAllproducts(e) {
+  var formDelete = document.forms.namedItem("deleteAllProducts");
+  formDelete.addEventListener("submit", function (event) {
     var outputDeleteAll = document.querySelector("#output-message-delete-all");
-    var _loop = function _loop() {
-      var request = new XMLHttpRequest();
-      request.open("POST", elementsToDelete[i].dataset['urldelete'], true);
-      request.onload = function () {
-        outputDeleteAll.classList.remove('hidden');
-        setTimeout(function () {
-          outputDeleteAll.innerHTML = "Error : Time out";
-          outputDeleteAll.classList.add('hidden');
-        }, 3000);
-        outputDeleteAll.innerHTML = request.status === 200 ? "Produits supprimés avec succès" : "Error ".concat(request.status, " un probl\xE8me est survenu lors de la suppression.<br />");
-      };
-      request.send(e.target);
-      e.preventDefault();
+    var formData = new FormData(formDelete);
+    var request = new XMLHttpRequest();
+    request.open("POST", deleteAllButton.dataset['deleteurl'], true);
+    request.onload = function (progress) {
+      outputDeleteAll.classList.remove('hidden');
+      setTimeout(function () {
+        outputDeleteAll.innerHTML = "Error : Time out";
+        outputDeleteAll.classList.add('hidden');
+      }, 3000);
+      document.getElementById('container-table-products').remove();
+      deleteAllButton.remove();
+      outputDeleteAll.innerHTML = request.status === 200 ? "Produits supprimés" : "Error ".concat(request.status, " probl\xE8me lors de la suppression de tous les produits.<br />");
     };
-    for (var i = 0; i < elementsToDelete.length; i++) {
-      _loop();
-    }
-  }
-  deleteAllButton.addEventListener('click', deleteAllproducts);
+    request.send(formData);
+    event.preventDefault();
+  }, false);
   function deleteProduct(e) {
+    console.log(e.target.dataset['urldelete']);
     var outputDelete = document.querySelector("#output-message-delete");
     var request = new XMLHttpRequest();
     request.open("POST", e.target.dataset['urldelete'], true);
+    console.log(request);
     request.onload = function () {
       var productLine = document.getElementById('product-line_' + e.target.dataset['productid']);
       productLine.remove();

@@ -4,7 +4,6 @@
 
 <!-- component -->
 <section class="container px-4 mx-auto mt-6">
-
     @if (session('success'))
         <div id="success-create-product" class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
             {{ session('success') }}.
@@ -17,29 +16,31 @@
     <h3 class="mt-10 mb-4 text-4xl leading-none tracking-tight text-left text-gray-500 md:text-5xl lg:text-6xl dark:text-white ">{{$category->name}}</h3>
     <div class="mt-6 md:flex md:items-center md:justify-between">
         <div>
-            <div class="inline-flex overflow-hidden bg-white border divide-x rounded-lg dark:bg-gray-900 rtl:flex-row-reverse dark:border-gray-700 dark:divide-gray-700">
+            <div class="inline-flex overflow-hidden bg-white border divide-x rounded-lg dark:bg-gray-900 rtl:flex-row-reverse dark:border-gray-700 dark:divide-gray-700 mr-4">
                 <a href="{{ route('category.product.not.ok', ['categoryId' => $category->id]) }}" class="px-5 py-2 text-xs font-semibold text-white transition-colors duration-200 bg-orange-500/60 sm:text-sm hover:bg-purple-800 dark:bg-gray-800 dark:text-gray-300">
-                   Produits à ajouter dans une de vos listes
+                    Produits à ajouter dans une de vos listes
                 </a>
             </div>
-        </div>
-        <div>
             <a href="{{ route('product.category.create', ['categoryId' => $category->id]) }}" class="
-            text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100
-            focus:ring-4 focus:ring-gray-200 font-medium rounded-full text-sm px-5 py-2.5 mr-2
-            dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700
-            dark:hover:border-gray-600 dark:focus:ring-gray-700 text-center">
+                text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100
+                focus:ring-4 focus:ring-gray-200 font-medium rounded-full text-sm px-5 py-2.5 mr-2
+                dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700
+                dark:hover:border-gray-600 dark:focus:ring-gray-700 text-center">
                 <i class="mr-2">+</i>Ajouter des produits
             </a>
-            <a href="#" id="delete-all" class="
-            text-white bg-orange-700/60 focus:outline-none hover:bg-orange-100 focus:ring-4
-            focus:ring-gray-200 font-medium rounded-full text-sm px-5 py-2.5 mr-2 dark:bg-gray-800
-            dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600
-            dark:focus:ring-gray-700 text-center">
-                Tout supprimer
-            </a>
         </div>
-
+        @if(count($products) > 0)
+            <form method="post" name="deleteAllProducts">
+                <button type="submit" id="delete-all" class="
+                text-white bg-orange-700/60 focus:outline-none hover:bg-orange-200 focus:ring-4
+                focus:ring-gray-200 font-medium rounded-full text-sm px-5 py-2.5 mr-2 dark:bg-gray-800
+                dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600
+                dark:focus:ring-gray-700 text-center"  data-deleteurl="{{ route('delete-all-category-products', ['categoryId' => $category->id]) }}"
+                >
+                    Tout supprimer
+                </button>
+            </form>
+        @endif
     </div>
     <div id="output-message-delete" class="hidden p-4 mb-4 mt-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert"></div>
     <div id="output-message-delete-all" class="hidden p-4 mb-4 mt-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert"></div>
@@ -51,7 +52,7 @@
             </div>
         </div>
     @else
-    <div class="flex flex-col mt-6">
+    <div id="container-table-products" class="flex flex-col mt-6">
         <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-2 lg:-mx-8">
             <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
                 <div class="overflow-hidden border border-gray-200 dark:border-gray-700 md:rounded-lg">
@@ -142,7 +143,6 @@
                                             @endif
                                         </div>
                                     </td>
-
                                     <td class="px-4 py-4 text-sm whitespace-nowrap">
                                         <a href="#" class="mt-2 cursor-pointer" data-productid="{{$product->id}}" data-urldelete="{{route('product.destroy',  ['categoryId' => $category->id, 'productId' => $product->id])}}" >
                                             <svg class="h-6 w-6 text-grey-600"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">
@@ -159,7 +159,6 @@
                     <div class="p-4">
                         {{$products->onEachSide(5)->links()}}
                     </div>
-
                 </div>
             </div>
         </div>
@@ -167,6 +166,7 @@
 @endif
 </section>
 <script>
+
     /*setTimeout(() => {
         document.getElementById("success-create-product").classList.add('hidden')
     }, 3000);*/

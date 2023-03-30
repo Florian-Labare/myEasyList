@@ -1,18 +1,21 @@
 document.addEventListener("DOMContentLoaded", function(e) {
     const elementsToDelete = document.querySelectorAll('[data-productid]');
     const deleteAllButton =  document.getElementById("delete-all");
-    console.log(elementsToDelete);
 
     Array.from(elementsToDelete).forEach( item => {
         item.addEventListener('click', deleteProduct, )
     });
 
-    function deleteAllproducts(e) {
-        const outputDeleteAll = document.querySelector("#output-message-delete-all")
-        for(let i = 0; i < elementsToDelete.length; i++) {
+    const formDelete = document.forms.namedItem("deleteAllProducts");
+    formDelete.addEventListener(
+        "submit",
+        (event) => {
+            const outputDeleteAll = document.querySelector("#output-message-delete-all");
+
+            const formData = new FormData(formDelete);
             const request = new XMLHttpRequest();
-            request.open("POST", elementsToDelete[i].dataset['urldelete'], true);
-            request.onload = () => {
+            request.open("POST", deleteAllButton.dataset['deleteurl'], true);
+            request.onload = (progress) => {
 
                 outputDeleteAll.classList.remove('hidden')
                 setTimeout(() => {
@@ -20,22 +23,28 @@ document.addEventListener("DOMContentLoaded", function(e) {
                     outputDeleteAll.classList.add('hidden')
                 }, 3000);
 
+                document.getElementById('container-table-products').remove();
+                deleteAllButton.remove();
+
                 outputDeleteAll.innerHTML =
                     request.status === 200
-                        ? "Produits supprimés avec succès"
-                        : `Error ${request.status} un problème est survenu lors de la suppression.<br />`;
+                        ? "Produits supprimés"
+                        :  `Error ${request.status} problème lors de la suppression de tous les produits.<br />`;
             };
 
-            request.send(e.target);
-            e.preventDefault();
-        }
-    }
-    deleteAllButton.addEventListener('click', deleteAllproducts);
+            request.send(formData);
+            event.preventDefault();
+        },
+        false
+    );
+
 
     function deleteProduct(e){
+        console.log(e.target.dataset['urldelete']);
         const outputDelete = document.querySelector("#output-message-delete");
         const request = new XMLHttpRequest();
         request.open("POST", e.target.dataset['urldelete'], true);
+        console.log(request);
         request.onload = () => {
             const productLine = document.getElementById('product-line_'+e.target.dataset['productid']);
             productLine.remove();
