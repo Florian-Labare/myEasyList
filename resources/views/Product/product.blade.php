@@ -14,14 +14,7 @@
             {{ session('error') }}
         </div>
     @endif
-    <div class="sm:flex sm:items-center sm:justify-between">
-        <div>
-            <div class="flex items-center gap-x-3">
-                <h3 class="text-4xl leading-none tracking-tight text-center text-gray-500 md:text-5xl lg:text-6xl dark:text-white mb-6">{{$category->name}}</h3>
-                <span class="px-3 py-1 text-xs text-blue-600 bg-blue-100 rounded-full dark:bg-gray-800 dark:text-blue-400">{{ count($products) }}</span>
-            </div>
-        </div>
-    </div>
+    <h3 class="mt-10 mb-4 text-4xl leading-none tracking-tight text-left text-gray-500 md:text-5xl lg:text-6xl dark:text-white ">{{$category->name}}</h3>
     <div class="mt-6 md:flex md:items-center md:justify-between">
         <div>
             <div class="inline-flex overflow-hidden bg-white border divide-x rounded-lg dark:bg-gray-900 rtl:flex-row-reverse dark:border-gray-700 dark:divide-gray-700">
@@ -30,9 +23,26 @@
                 </a>
             </div>
         </div>
-        <a href="{{ route('product.category.create', ['categoryId' => $category->id]) }}" class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-full text-sm px-5 py-2.5 mr-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 text-center"><i class="mr-2">+</i>Ajouter un produit</a>
+        <div>
+            <a href="{{ route('product.category.create', ['categoryId' => $category->id]) }}" class="
+            text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100
+            focus:ring-4 focus:ring-gray-200 font-medium rounded-full text-sm px-5 py-2.5 mr-2
+            dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700
+            dark:hover:border-gray-600 dark:focus:ring-gray-700 text-center">
+                <i class="mr-2">+</i>Ajouter des produits
+            </a>
+            <a href="#" id="delete-all" class="
+            text-white bg-orange-700/60 focus:outline-none hover:bg-orange-100 focus:ring-4
+            focus:ring-gray-200 font-medium rounded-full text-sm px-5 py-2.5 mr-2 dark:bg-gray-800
+            dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600
+            dark:focus:ring-gray-700 text-center">
+                Tout supprimer
+            </a>
+        </div>
+
     </div>
     <div id="output-message-delete" class="hidden p-4 mb-4 mt-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert"></div>
+    <div id="output-message-delete-all" class="hidden p-4 mb-4 mt-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert"></div>
     @if(count($products) == 0)
         <div id="alert-4" class="alert-empty-products flex p-4 mb-4 mt-6 text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300" role="alert">
             <svg aria-hidden="true" class="flex-shrink-0 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
@@ -134,40 +144,22 @@
                                     </td>
 
                                     <td class="px-4 py-4 text-sm whitespace-nowrap">
-                                            <a href="#" class="mt-2 cursor-pointer" data-productid="{{$product->id}}" data-urldelete="{{route('product.destroy',  ['categoryId' => $category->id, 'productId' => $product->id])}}" >
-                                                <svg class="h-6 w-6 text-grey-600"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">
-                                                    <polyline points="3 6 5 6 21 6" />
-                                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                                                    <line x1="10" y1="11" x2="10" y2="17" />  <line x1="14" y1="11" x2="14" y2="17" />
-                                                </svg>
-                                            </a>
+                                        <a href="#" class="mt-2 cursor-pointer" data-productid="{{$product->id}}" data-urldelete="{{route('product.destroy',  ['categoryId' => $category->id, 'productId' => $product->id])}}" >
+                                            <svg class="h-6 w-6 text-grey-600"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">
+                                                <polyline points="3 6 5 6 21 6" />
+                                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                                                <line x1="10" y1="11" x2="10" y2="17" />  <line x1="14" y1="11" x2="14" y2="17" />
+                                            </svg>
+                                        </a>
                                     </td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
-                    <div id="pagination" class="flex justify-between p-6">
-                        @for($i = 1; $i <= $products->lastPage(); $i++)
-                            @if($i == 1)
-                                <a href="{{route('products.category', ['categoryId' => $category->id]).'?page='.$i}}">
-                                    <i>
-                                        <svg class="h-8 w-8"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                            <path stroke="none" d="M0 0h24v24H0z"/>
-                                            <polyline points="15 6 9 12 15 18" />
-                                        </svg>
-                                    </i>
-                                </a>
-                            @else
-                                <a href="{{route('products.category', ['categoryId' => $category->id]).'?page='.$i}}">
-                                    <i>
-                                        <svg class="h-8 w-8"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">
-                                            <polyline points="9 18 15 12 9 6" />
-                                        </svg>
-                                    </i>
-                                </a>
-                            @endif
-                        @endfor
+                    <div class="p-4">
+                        {{$products->onEachSide(5)->links()}}
                     </div>
+
                 </div>
             </div>
         </div>
@@ -175,9 +167,9 @@
 @endif
 </section>
 <script>
-    setTimeout(() => {
+    /*setTimeout(() => {
         document.getElementById("success-create-product").classList.add('hidden')
-    }, 3000);
+    }, 3000);*/
 </script>
 @endsection
 

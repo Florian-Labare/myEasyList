@@ -2100,49 +2100,51 @@ document.addEventListener("DOMContentLoaded", function (e) {
   \**********************************************************/
 /***/ (() => {
 
-function getElementByProductId(label, productId) {
-  return document.getElementById(label + '_' + productId);
-}
-var referenceDays = document.querySelectorAll('[data-product]');
-document.getElementById('success-output').classList.add('hidden');
+document.addEventListener("DOMContentLoaded", function (e) {
+  function getElementByProductId(label, productId) {
+    return document.getElementById(label + '_' + productId);
+  }
+  var referenceDays = document.querySelectorAll('[data-product]');
+  document.getElementById('success-output').classList.add('hidden');
 
-// set reference validity days in list
-Array.from(referenceDays).forEach(function (item) {
-  item.addEventListener('click', addReferenceDays);
-});
-Array.from(referenceDays).forEach(function (item) {
-  if (item.dataset['status'] === "OK") {
-    item.classList.add('hidden');
+  // set reference validity days in list
+  Array.from(referenceDays).forEach(function (item) {
+    item.addEventListener('click', addReferenceDays);
+  });
+  Array.from(referenceDays).forEach(function (item) {
+    if (item.dataset['status'] === "OK") {
+      item.classList.add('hidden');
+    }
+  });
+  function addReferenceDays(e) {
+    var request = new XMLHttpRequest();
+    var productId = e.target.dataset['product'];
+    var outputStatusChange = getElementByProductId('output-status-change', productId);
+    var outputRemainingDayChange = getElementByProductId('output-remaining-day-change', productId);
+    var buttonAddReferenceDays = getElementByProductId('addReferenceDays', productId);
+    var output = document.getElementById('success-output');
+    request.open("POST", e.target.dataset['url'], true);
+    request.onload = function () {
+      var parse = JSON.parse(request.response);
+      output.classList.remove('hidden');
+      if (parse.product_status === "OK") {
+        outputStatusChange.classList.remove('bg-orange-300/60');
+        outputStatusChange.classList.remove('bg-red-300/60');
+        outputStatusChange.classList.add('bg-emerald-300/60');
+      }
+      setTimeout(function () {
+        output.innerHTML = "Error : Time out";
+        output.classList.add('hidden');
+      }, 3000);
+      buttonAddReferenceDays.classList.add('hidden');
+      output.innerHTML = request.status === 200 ? e.target.dataset['name'] + " modifié avec succès" : "Error ".concat(request.status, " occurred when trying to send data.<br />");
+      outputStatusChange.innerHTML = request.status === 200 ? parse.product_status : "Error ".concat(request.status, " occurred when trying to send product status.<br />");
+      outputRemainingDayChange.innerHTML = request.status === 200 ? parse.remaining_day : "Error ".concat(request.status, " occurred when trying to send remaining day.<br />");
+    };
+    request.send(e.target);
+    e.preventDefault();
   }
 });
-function addReferenceDays(e) {
-  var request = new XMLHttpRequest();
-  var productId = e.target.dataset['product'];
-  var outputStatusChange = getElementByProductId('output-status-change', productId);
-  var outputRemainingDayChange = getElementByProductId('output-remaining-day-change', productId);
-  var buttonAddReferenceDays = getElementByProductId('addReferenceDays', productId);
-  var output = document.getElementById('success-output');
-  request.open("POST", e.target.dataset['url'], true);
-  request.onload = function () {
-    var parse = JSON.parse(request.response);
-    output.classList.remove('hidden');
-    if (parse.product_status === "OK") {
-      outputStatusChange.classList.remove('bg-orange-300/60');
-      outputStatusChange.classList.remove('bg-red-300/60');
-      outputStatusChange.classList.add('bg-emerald-300/60');
-    }
-    setTimeout(function () {
-      output.innerHTML = "Error : Time out";
-      output.classList.add('hidden');
-    }, 3000);
-    buttonAddReferenceDays.classList.add('hidden');
-    output.innerHTML = request.status === 200 ? e.target.dataset['name'] + " modifié avec succès" : "Error ".concat(request.status, " occurred when trying to send data.<br />");
-    outputStatusChange.innerHTML = request.status === 200 ? parse.product_status : "Error ".concat(request.status, " occurred when trying to send product status.<br />");
-    outputRemainingDayChange.innerHTML = request.status === 200 ? parse.remaining_day : "Error ".concat(request.status, " occurred when trying to send remaining day.<br />");
-  };
-  request.send(e.target);
-  e.preventDefault();
-}
 
 /***/ }),
 
@@ -2152,27 +2154,52 @@ function addReferenceDays(e) {
   \***********************************************/
 /***/ (() => {
 
-var elementsToDelete = document.querySelectorAll('[data-productid]');
-Array.from(elementsToDelete).forEach(function (item) {
-  item.addEventListener('click', deleteProduct);
+document.addEventListener("DOMContentLoaded", function (e) {
+  var elementsToDelete = document.querySelectorAll('[data-productid]');
+  var deleteAllButton = document.getElementById("delete-all");
+  console.log(elementsToDelete);
+  Array.from(elementsToDelete).forEach(function (item) {
+    item.addEventListener('click', deleteProduct);
+  });
+  function deleteAllproducts(e) {
+    var outputDeleteAll = document.querySelector("#output-message-delete-all");
+    var _loop = function _loop() {
+      var request = new XMLHttpRequest();
+      request.open("POST", elementsToDelete[i].dataset['urldelete'], true);
+      request.onload = function () {
+        outputDeleteAll.classList.remove('hidden');
+        setTimeout(function () {
+          outputDeleteAll.innerHTML = "Error : Time out";
+          outputDeleteAll.classList.add('hidden');
+        }, 3000);
+        outputDeleteAll.innerHTML = request.status === 200 ? "Produits supprimés avec succès" : "Error ".concat(request.status, " un probl\xE8me est survenu lors de la suppression.<br />");
+      };
+      request.send(e.target);
+      e.preventDefault();
+    };
+    for (var i = 0; i < elementsToDelete.length; i++) {
+      _loop();
+    }
+  }
+  deleteAllButton.addEventListener('click', deleteAllproducts);
+  function deleteProduct(e) {
+    var outputDelete = document.querySelector("#output-message-delete");
+    var request = new XMLHttpRequest();
+    request.open("POST", e.target.dataset['urldelete'], true);
+    request.onload = function () {
+      var productLine = document.getElementById('product-line_' + e.target.dataset['productid']);
+      productLine.remove();
+      outputDelete.classList.remove('hidden');
+      setTimeout(function () {
+        outputDelete.innerHTML = "Error : Time out";
+        outputDelete.classList.add('hidden');
+      }, 3000);
+      outputDelete.innerHTML = request.status === 200 ? "Produit supprimé avec succès" : "Error ".concat(request.status, " un probl\xE8me est survenu lors de la suppression.<br />");
+    };
+    request.send(e.target);
+    e.preventDefault();
+  }
 });
-function deleteProduct(e) {
-  var outputDelete = document.querySelector("#output-message-delete");
-  var request = new XMLHttpRequest();
-  request.open("POST", e.target.dataset['urldelete'], true);
-  request.onload = function () {
-    var productLine = document.getElementById('product-line_' + e.target.dataset['productid']);
-    productLine.remove();
-    outputDelete.classList.remove('hidden');
-    setTimeout(function () {
-      outputDelete.innerHTML = "Error : Time out";
-      outputDelete.classList.add('hidden');
-    }, 3000);
-    outputDelete.innerHTML = request.status === 200 ? "Produit supprimé avec succès" : "Error ".concat(request.status, " un probl\xE8me est survenu lors de la suppression.<br />");
-  };
-  request.send(e.target);
-  e.preventDefault();
-}
 
 /***/ }),
 
