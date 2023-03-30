@@ -12,6 +12,7 @@
 @section('content')
     <!-- component -->
     <section class="container px-4 mx-auto">
+        <div class="hidden w-96 p-4 mb-4 text-sm rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert" id="output"></div>
         <div class="flex justify-between mt-6">
             <h1 class="font-semibold text-xl text-left text-gray-600 mb-6">Ici vous pouvez ajouter les produits dans une de vos listes créées</h1>
             <div>
@@ -109,7 +110,6 @@
                 </a>
                 <button @if(count($products) == 0) disabled @endif type="submit" class="mt-10 w-36 text-white bg-purple-700 hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300 font-medium rounded-full text-sm px-5 py-2.5 text-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900">Valider</button>
             </div>
-            <div class="hidden w-96 p-4 mb-4 text-sm rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert" id="output"></div>
         </form>
     </section>
 @endsection

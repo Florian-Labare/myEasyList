@@ -7,14 +7,9 @@ use App\Enum\ProductStatus;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\ShoppingList;
-use App\Service\PaginationService;
 use Carbon\Carbon;
-use http\Env\Response;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\View\View;
-use function PHPUnit\Framework\isInstanceOf;
 use function response;
 
 class ProductController extends Controller
@@ -50,22 +45,25 @@ class ProductController extends Controller
      */
     public function store(Request $request, int $categoryId = null)
     {
+        $product =  null;
         if (empty($categoryId)) {
             $request->validate([
-                'name' => 'required|regex:/^([a-zA-Z0-9'.HelperAccent::ACCENT_LETTERS.']+)(\s[a-zA-Z0-9'.HelperAccent::ACCENT_LETTERS.']+)*$/|unique:products,name,NULL,id,deleted_at,NULL',
+                'products.*' => 'required|regex:/^([a-zA-Z0-9'.HelperAccent::ACCENT_LETTERS.']+)(\s[a-zA-Z0-9'.HelperAccent::ACCENT_LETTERS.']+)*$/|unique:products,name,NULL,id,deleted_at,NULL',
                 'category' => 'required|exists:categories,id',
             ]);
         } else {
             $request->validate([
-                'name' => 'required|regex:/^([a-zA-Z0-9'.HelperAccent::ACCENT_LETTERS.']+)(\s[a-zA-Z0-9'.HelperAccent::ACCENT_LETTERS.']+)*$/|unique:products,name,NULL,id,deleted_at,NULL',
+                'products.*' => 'required|regex:/^([a-zA-Z0-9'.HelperAccent::ACCENT_LETTERS.']+)(\s[a-zA-Z0-9'.HelperAccent::ACCENT_LETTERS.']+)*$/|unique:products,name,NULL,id,deleted_at,NULL',
             ]);
         }
 
-        $product = new Product;
-        $product->name = $request->name;
-        $product->category_id = !empty($categoryId) ? $categoryId : $request->category;
-        $product->begin_date  = Carbon::today();
-        $product->save();
+        foreach ($request->products as $productName) {
+            $product = new Product;
+            $product->name = $productName;
+            $product->category_id = !empty($categoryId) ? $categoryId : $request->category;
+            $product->begin_date  = Carbon::today();
+            $product->save();
+        }
 
         return redirect()->route('products.category', [
             'categoryId' => $product->category_id
@@ -115,10 +113,11 @@ class ProductController extends Controller
     /**
      * Delete product
      *
-     * @param string $productId
+     * @param int $categoryId
+     * @param int $productId
      * @return JsonResponse
      */
-    public function destroy(int $productId): JsonResponse
+    public function destroy(int $categoryId, int $productId): JsonResponse
     {
         $product = Product::findById($productId);
         if (empty($product)) {
@@ -129,16 +128,6 @@ class ProductController extends Controller
         $product->delete();
 
         return response()->json(['status' => 'success', 'message' => 'Product has been deleted']);
-    }
-
-    /**
-     * List products with not ok status
-     *
-     * @return array
-     */
-    public function listProductWithNotOkStatus()
-    {
-        return Product::getNotOkStatus(ProductStatus::NOT_OK_STATUSES);
     }
 
     /**

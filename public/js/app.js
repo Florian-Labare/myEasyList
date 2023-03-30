@@ -2100,10 +2100,10 @@ document.addEventListener("DOMContentLoaded", function (e) {
   \**********************************************************/
 /***/ (() => {
 
-function getElementByProductId(label, productId) {
-  return document.getElementById(label + '_' + productId);
-}
 document.addEventListener("DOMContentLoaded", function (e) {
+  function getElementByProductId(label, productId) {
+    return document.getElementById(label + '_' + productId);
+  }
   var referenceDays = document.querySelectorAll('[data-product]');
   document.getElementById('success-output').classList.add('hidden');
 
@@ -2140,6 +2140,61 @@ document.addEventListener("DOMContentLoaded", function (e) {
       output.innerHTML = request.status === 200 ? e.target.dataset['name'] + " modifié avec succès" : "Error ".concat(request.status, " occurred when trying to send data.<br />");
       outputStatusChange.innerHTML = request.status === 200 ? parse.product_status : "Error ".concat(request.status, " occurred when trying to send product status.<br />");
       outputRemainingDayChange.innerHTML = request.status === 200 ? parse.remaining_day : "Error ".concat(request.status, " occurred when trying to send remaining day.<br />");
+    };
+    request.send(e.target);
+    e.preventDefault();
+  }
+});
+
+/***/ }),
+
+/***/ "./resources/js/Product/deleteProduct.js":
+/*!***********************************************!*\
+  !*** ./resources/js/Product/deleteProduct.js ***!
+  \***********************************************/
+/***/ (() => {
+
+document.addEventListener("DOMContentLoaded", function (e) {
+  var elementsToDelete = document.querySelectorAll('[data-productid]');
+  var deleteAllButton = document.getElementById("delete-all");
+  console.log(elementsToDelete);
+  Array.from(elementsToDelete).forEach(function (item) {
+    item.addEventListener('click', deleteProduct);
+  });
+  function deleteAllproducts(e) {
+    var outputDeleteAll = document.querySelector("#output-message-delete-all");
+    var _loop = function _loop() {
+      var request = new XMLHttpRequest();
+      request.open("POST", elementsToDelete[i].dataset['urldelete'], true);
+      request.onload = function () {
+        outputDeleteAll.classList.remove('hidden');
+        setTimeout(function () {
+          outputDeleteAll.innerHTML = "Error : Time out";
+          outputDeleteAll.classList.add('hidden');
+        }, 3000);
+        outputDeleteAll.innerHTML = request.status === 200 ? "Produits supprimés avec succès" : "Error ".concat(request.status, " un probl\xE8me est survenu lors de la suppression.<br />");
+      };
+      request.send(e.target);
+      e.preventDefault();
+    };
+    for (var i = 0; i < elementsToDelete.length; i++) {
+      _loop();
+    }
+  }
+  deleteAllButton.addEventListener('click', deleteAllproducts);
+  function deleteProduct(e) {
+    var outputDelete = document.querySelector("#output-message-delete");
+    var request = new XMLHttpRequest();
+    request.open("POST", e.target.dataset['urldelete'], true);
+    request.onload = function () {
+      var productLine = document.getElementById('product-line_' + e.target.dataset['productid']);
+      productLine.remove();
+      outputDelete.classList.remove('hidden');
+      setTimeout(function () {
+        outputDelete.innerHTML = "Error : Time out";
+        outputDelete.classList.add('hidden');
+      }, 3000);
+      outputDelete.innerHTML = request.status === 200 ? "Produit supprimé avec succès" : "Error ".concat(request.status, " un probl\xE8me est survenu lors de la suppression.<br />");
     };
     request.send(e.target);
     e.preventDefault();
@@ -2262,6 +2317,7 @@ __webpack_require__(/*! ./tabs */ "./resources/js/tabs.js");
 __webpack_require__(/*! ./Product/selectOrDeslectProductsCheckBox */ "./resources/js/Product/selectOrDeslectProductsCheckBox.js");
 __webpack_require__(/*! ./Product/addProductsInList */ "./resources/js/Product/addProductsInList.js");
 __webpack_require__(/*! ./Product/addReferenceValidityDays */ "./resources/js/Product/addReferenceValidityDays.js");
+__webpack_require__(/*! ./Product/deleteProduct */ "./resources/js/Product/deleteProduct.js");
 
 /***/ }),
 

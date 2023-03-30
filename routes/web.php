@@ -40,7 +40,6 @@ Route::prefix('category')->group(function () {
             // productId
             Route::post('{productId}/update', [ProductController::class, 'update'])->name('product.update');
             Route::get('{productId}/edit', [ProductController::class, 'edit'])->name('product.edit');
-            Route::post('{productId}/destroy', [ProductController::class, 'destroy'])->name('product.destroy');
 
             Route::post('{productId}/add_days', [ProductController::class, 'addValidityDaysCategoryProduct'])->name('product.category.add.days');
 

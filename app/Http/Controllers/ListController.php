@@ -3,13 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Enum\HelperAccent;
-use App\Enum\ProductStatus;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\ShoppingList;
-use http\Env\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use function PHPUnit\Framework\isNan;
 
 class ListController extends Controller
 {
@@ -24,7 +22,6 @@ class ListController extends Controller
 
         $list = new ShoppingList();
         $list->title = $request->title;
-        $list->products_data = $request->products;
         $list->save();
 
         return redirect()->route('home')->with('success', 'la liste '.$list->title.' a bien été créée');
@@ -53,12 +50,18 @@ class ListController extends Controller
         $categories = Category::all();
         $productsName = @$list->products_data;
 
+        if(empty($productsName)) {
+
+            return view('List.list', [
+                'list' => $list,
+            ]);
+        }
+
         foreach ($categories as $category) {
             $productsNamesByCategory = $category->products()->pluck('name')->toArray();
             foreach ($productsName as $productName) {
                 if(in_array($productName, $productsNamesByCategory)) {
                     $objProduct = Product::findByName($productName);
-
                     $triProductsByCategory[$category->id]['category_name'] = $category->name;
                     $triProductsByCategory[$category->id]['products'][] = $objProduct;
                 }
@@ -119,7 +122,7 @@ class ListController extends Controller
      * @param int $listId
      * @return \Illuminate\Http\JsonResponse
      */
-    public function addProductsTolist(Request $request, int $listId)
+    public function addProductsTolist(Request $request, int $listId) : JsonResponse
     {
         $list = ShoppingList::findById($listId);
         if(empty($list)) {
@@ -138,7 +141,7 @@ class ListController extends Controller
      * @param int $listId
      * @return \Illuminate\Http\JsonResponse
      */
-    public function mergeProductsToList(Request $request, int $listId)
+    public function mergeProductsToList(Request $request, int $listId) : JsonResponse
     {
         $list = ShoppingList::findById($listId);
         if(empty($list)) {

@@ -1,13 +1,12 @@
-function getElementByProductId(label, productId){
-    return document.getElementById(label+'_'+productId);
-}
-
 document.addEventListener("DOMContentLoaded", function(e) {
+    function getElementByProductId(label, productId){
+        return document.getElementById(label+'_'+productId);
+    }
 
     const referenceDays = document.querySelectorAll('[data-product]');
     document.getElementById('success-output').classList.add('hidden');
 
-    // set reference validity days in list
+// set reference validity days in list
     Array.from(referenceDays).forEach( item => {
         item.addEventListener('click', addReferenceDays, )
     });
@@ -62,5 +61,6 @@ document.addEventListener("DOMContentLoaded", function(e) {
         request.send(e.target);
         e.preventDefault();
     }
-
 });
+
+

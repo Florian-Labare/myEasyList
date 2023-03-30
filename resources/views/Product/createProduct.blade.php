@@ -21,9 +21,26 @@
                             <form method="POST" action="@if(\Illuminate\Support\Facades\Route::currentRouteName() == 'product.category.create'){{ route('product.category.store', ['categoryId' => $category->id]) }} @else {{ route('product.store') }} @endif ">
                                 <div class="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-5">
                                     @csrf
-                                    <div class="md:col-span-5">
-                                        <label for="name">Nom du produit</label>
-                                        <input type="text" name="name" id="name" class="h-10 border mt-1 rounded px-4 w-full bg-gray-50" value="" />
+                                    <div class="wrapper md:col-span-5">
+                                        <div id="survey_options">
+                                            <label for="products">Nom du produit</label>
+                                            <input type="text" name="products[]" class="h-10 border mt-1 rounded px-4 w-full bg-gray-50" value="" />
+                                            <div class="controls flex mt-3">
+                                                <a href="#" id="add_more_fields">
+                                                    <svg class="h-8 w-8 text-purple-700"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                        <path stroke="none" d="M0 0h24v24H0z"/>
+                                                        <line x1="12" y1="5" x2="12" y2="19" />
+                                                        <line x1="5" y1="12" x2="19" y2="12" />
+                                                    </svg>
+                                                </a>
+                                                <a href="#" id="remove_fields">
+                                                    <svg class="h-8 w-8 text-red-500"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                        <path stroke="none" d="M0 0h24v24H0z"/>
+                                                        <line x1="5" y1="12" x2="19" y2="12" />
+                                                    </svg>
+                                                </a>
+                                            </div>
+                                        </div>
                                     </div>
                                     @if(\Illuminate\Support\Facades\Route::currentRouteName() == 'product.create')
                                         <div class="md:col-span-5">
@@ -49,6 +66,40 @@
             </div>
         </div>
     </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+
+            const survey_options = document.getElementById('survey_options');
+            const add_more_fields = document.getElementById('add_more_fields');
+            const remove_fields = document.getElementById('remove_fields');
+            const input_tags = survey_options.getElementsByTagName('input');
+
+            if(input_tags.length === 1) {
+                remove_fields.classList.add('hidden');
+            }
+
+            const addField = ()=> {
+               remove_fields.classList.remove('hidden');
+               const newField = document.createElement('input');
+               newField.setAttribute('type','text');
+               newField.setAttribute('name','products[]');
+               newField.setAttribute('class','h-10 border mt-1 mb-3 rounded px-4 w-full bg-gray-50');
+               survey_options.appendChild(newField);
+           }
+
+           const removeField = ()=> {
+               if(input_tags.length > 1) {
+                   survey_options.removeChild(input_tags[(input_tags.length) - 1]);
+                   if(input_tags.length === 1) {
+                       remove_fields.classList.add('hidden');
+                   }
+               }
+
+           }
+           add_more_fields.addEventListener('click', addField);
+           remove_fields.addEventListener('click', removeField);
+        });
+    </script>
 @endsection
 
 
