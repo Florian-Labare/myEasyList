@@ -58,7 +58,7 @@ class ListController extends Controller
         }
 
         foreach ($categories as $category) {
-            $productsNamesByCategory = $category->products()->pluck('name')->toArray();
+            $productsNamesByCategory = $category->pluckProductsNames($category->id);
             foreach ($productsName as $productName) {
                 if(in_array($productName, $productsNamesByCategory)) {
                     $objProduct = Product::findByName($productName);

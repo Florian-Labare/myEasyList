@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Enum\HelperAccent;
 use App\Models\Category;
+use App\Models\Product;
+use App\Models\ShoppingList;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
@@ -70,6 +72,8 @@ class CategoryController extends Controller
     public function deleteAllCategoryProducts(int $categoryId)
     {
         $category = Category::findById($categoryId);
+        $lists = ShoppingList::all();
+        $productsNames = $category->pluckProductsNames($categoryId);
 
         if(empty($category)) {
 
@@ -81,8 +85,16 @@ class CategoryController extends Controller
             $product->delete();
         }
 
-        return response()->json(['success' => 'produits supprimés']);
+        foreach ($lists as $list) {
+            foreach ($productsNames as $name) {
+                if(in_array($name, $list->products_data)) {
+                    $list->products_data = [];
+                    $list->save();
+                }
+            }
+        }
 
+        return response()->json(['success' => 'produits supprimés']);
     }
 
 }

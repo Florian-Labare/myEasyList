@@ -63,4 +63,17 @@ class Category extends Model
         return $displayProducts;
     }
 
+    /**
+     * array products names
+     *
+     * @param int $categoryId
+     * @return array
+     */
+    public function pluckProductsNames(int $categoryId) :array
+    {
+        $category =  self::findById($categoryId);
+
+        return $category->products()->pluck('name')->toArray();
+    }
+
 }
