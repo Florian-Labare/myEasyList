@@ -5,7 +5,7 @@
     <div class="max-h-screen p-6 bg-white-100 flex items-center justify-center">
         <div class="container max-w-screen-lg mx-auto">
             <div>
-                <h1 class="mb-2 text-2xl tracking-tight text-gray-900 dark:text-white">Ajouter une liste</h1>
+                <h1 class="font-semibold text-xl text-gray-600 mb-6">Ajouter une liste</h1>
                 <div class="bg-white rounded shadow-lg p-4 px-4 md:p-8 mb-6">
                     @if(isset($errors))
                         @if(count($errors) >0 )
@@ -21,8 +21,7 @@
                             <form method="POST" action="{{route('list.store')}}">
                                 @csrf
                                 <div class="md:col-span-5">
-                                    <label for="title">Titre</label>
-                                    <input type="text" name="title" id="title" class="h-10 border mt-1 rounded px-4 w-full bg-gray-50" value="" />
+                                    <input type="text" name="title" id="title" class="h-10 border mt-1 rounded px-4 w-full bg-gray-50" value="" placeholder="Titre de votre liste"/>
                                 </div>
                                 <div class="md:col-span-5 text-right mt-3">
                                     <div class="inline-flex items-end">

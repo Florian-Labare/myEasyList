@@ -93,6 +93,16 @@ class ProductController extends Controller
         ]);
     }
 
+    public function edit(int $categoryId, int $productId)
+    {
+        $product = Product::findById($productId);
+
+        return view('Product.editProduct', [
+            'categoryId' => $categoryId,
+            'product' => $product
+        ]);
+    }
+
     /**
      * Edit product
      *
@@ -103,11 +113,16 @@ class ProductController extends Controller
      */
     public function update(Request $request, int $categoryId, int $productId)
     {
-        $request->validate(['name' => 'required']);
+        $request->validate(['product' => 'required']);
         $product = Product::findById($productId);
-        $product->updateItem($request->name);
+        if(empty($product)) {
 
-        return redirect()->back()->with('success', 'le produit ' .$product->name. 'a bien été mis à jour' );
+            return redirect()->back()->with('error', 'Aucun produit n\'a été trouvée');
+        }
+
+        $product->updateItem($request->product);
+
+        return redirect()->route('products.category', ['categoryId' => $categoryId])->with('success', 'le produit ' .$product->name. 'a bien été mis à jour' );
     }
 
     /**

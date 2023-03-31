@@ -23,8 +23,7 @@
                                     @csrf
                                     <div class="wrapper md:col-span-5">
                                         <div id="survey_options">
-                                            <label for="products">Nom du produit</label>
-                                            <input type="text" name="products[]" class="h-10 border mt-1 rounded px-4 w-full bg-gray-50" value="" />
+                                            <input type="text" name="products[]" class="h-10 border mt-1 rounded px-4 w-full bg-gray-50" value="" placeholder="Nom du produit"/>
                                         </div>
                                     </div>
                                     <div class="controls flex">
@@ -83,6 +82,7 @@
                const newField = document.createElement('input');
                newField.setAttribute('type','text');
                newField.setAttribute('name','products[]');
+               newField.setAttribute('placeholder','Nom du produit');
                newField.setAttribute('class','h-10 border mt-1 mt-3 rounded px-4 w-full bg-gray-50');
                survey_options.appendChild(newField);
            }

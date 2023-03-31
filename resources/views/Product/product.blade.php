@@ -13,12 +13,12 @@
             {{ session('error') }}
         </div>
     @endif
-    <h3 class="mt-10 mb-4 text-4xl leading-none tracking-tight text-left text-gray-500 md:text-5xl lg:text-6xl dark:text-white ">{{$category->name}}</h3>
+    <h3 class="mt-10 mb-4 text-4xl leading-none tracking-tight text-left text-gray-500 md:text-5xl lg:text-6xl dark:text-white">{{$category->name}}</h3>
     <div class="mt-6 md:flex md:items-center md:justify-between">
         <div>
             <div class="inline-flex overflow-hidden bg-white border divide-x rounded-lg dark:bg-gray-900 rtl:flex-row-reverse dark:border-gray-700 dark:divide-gray-700 mr-4">
                 <a href="{{ route('category.product.not.ok', ['categoryId' => $category->id]) }}" class="px-5 py-2 text-xs font-semibold text-white transition-colors duration-200 bg-orange-500/60 sm:text-sm hover:bg-purple-800 dark:bg-gray-800 dark:text-gray-300">
-                    Produits à ajouter dans une de vos listes
+                    <i class="fa fa-list mr-2"></i>Produits à ajouter dans une de vos listes
                 </a>
             </div>
             <a href="{{ route('product.category.create', ['categoryId' => $category->id]) }}" class="
@@ -26,17 +26,18 @@
                 focus:ring-4 focus:ring-gray-200 font-medium rounded-full text-sm px-5 py-2.5 mr-2
                 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700
                 dark:hover:border-gray-600 dark:focus:ring-gray-700 text-center">
-                <i class="mr-2">+</i>Ajouter des produits
+                <i class="fa fa-add mr-2 mt-1"></i>Ajouter des produits
             </a>
         </div>
         @if(count($products) > 0)
             <form method="post" name="deleteAllProducts">
                 <button type="submit" id="delete-all" class="
-                text-white bg-orange-700/60 focus:outline-none hover:bg-orange-200 focus:ring-4
-                focus:ring-gray-200 font-medium rounded-full text-sm px-5 py-2.5 mr-2 dark:bg-gray-800
+                text-white bg-orange-500/60 focus:outline-none hover:bg-orange-200 focus:ring-4
+                focus:ring-gray-200 font-medium rounded-full text-sm px-5 py-2.5 mr-2 mt-4 dark:bg-gray-800
                 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600
                 dark:focus:ring-gray-700 text-center"  data-deleteurl="{{ route('delete-all-category-products', ['categoryId' => $category->id]) }}"
                 >
+                    <i class="fa fa-trash"></i>
                     Tout supprimer
                 </button>
             </form>
@@ -83,7 +84,7 @@
                                 <tr id="product-line_{{$product->id}}">
                                     <td class="px-4 py-4 text-sm font-medium whitespace-nowrap">
                                         <div>
-                                            <h2 class="font-medium text-gray-800 dark:text-white "><strong>{{ $product->name }}</strong></h2>
+                                            <h2 class="font-medium text-gray-800 dark:text-white "><strong>{{$product->name}}</strong></h2>
                                         </div>
                                     </td>
                                     <td class="px-12 py-4 text-sm font-medium whitespace-nowrap">
@@ -95,7 +96,7 @@
                                              @else
                                                 bg-orange-300/60 dark:bg-gray-800
                                              @endif">
-                                             {{ $product->getStatus() }}
+                                             {{$product->getStatus()}}
                                         </div>
                                     </td>
                                     <td class="px-4 py-4 text-sm whitespace-nowrap">
@@ -143,13 +144,19 @@
                                             @endif
                                         </div>
                                     </td>
-                                    <td class="px-4 py-4 text-sm whitespace-nowrap">
-                                        <a href="#" class="mt-2 cursor-pointer" data-productid="{{$product->id}}" data-urldelete="{{route('product.destroy',  ['categoryId' => $category->id, 'productId' => $product->id])}}" >
-                                            <svg class="h-6 w-6 text-grey-600"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">
-                                                <polyline points="3 6 5 6 21 6" />
-                                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                                                <line x1="10" y1="11" x2="10" y2="17" />  <line x1="14" y1="11" x2="14" y2="17" />
-                                            </svg>
+                                    <td class="px-4 py-4 text-sm whitespace-nowrap text-center">
+                                        <button type="button" class=" text-center text-gray-900 bg-white border border-gray-100 focus:outline-none hover:bg-gray-100
+                                            focus:ring-4 focus:ring-gray-200 font-medium rounded-full text-sm px-5 py-2.5
+                                            dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700
+                                            dark:hover:border-gray-600 dark:focus:ring-gray-700 text-center cursor-pointer" data-productid="{{$product->id}}" data-urldelete="{{route('product.destroy',  ['categoryId' => $category->id, 'productId' => $product->id])}}">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                        <a href="{{route('product.edit',  ['categoryId' => $category->id, 'productId' => $product->id])}}" class="
+                                            text-center text-gray-900 bg-white border border-gray-100 focus:outline-none hover:bg-gray-100
+                                            focus:ring-4 focus:ring-gray-200 font-medium rounded-full text-sm px-5 py-2.5
+                                            dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700
+                                            dark:hover:border-gray-600 dark:focus:ring-gray-700 text-center cursor-pointer">
+                                            <i class="fa fa-edit"></i>
                                         </a>
                                     </td>
                                 </tr>
