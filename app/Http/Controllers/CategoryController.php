@@ -6,6 +6,7 @@ use App\Enum\HelperAccent;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\ShoppingList;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
@@ -14,6 +15,7 @@ class CategoryController extends Controller
      * Insert Category
      *
      * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse|string
      */
     public function store(Request $request)
     {
@@ -66,10 +68,12 @@ class CategoryController extends Controller
     }
 
     /**
+     * Delet all products in category
+     *
      * @param int $categoryId
-     * @return \Illuminate\Http\JsonResponse|void
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function deleteAllCategoryProducts(int $categoryId)
+    public function deleteAllCategoryProducts(int $categoryId): JsonResponse
     {
         $category = Category::findById($categoryId);
         $lists = ShoppingList::all();
@@ -77,7 +81,7 @@ class CategoryController extends Controller
 
         if(empty($category)) {
 
-            return response()->json(['error' => 'Aucune catégorie n\'a été trouvée']);
+            return response()->json(['error' => 'Aucune catégorie n\'a été trouvée'], 404);
         }
 
         $products = $category->products()->get();

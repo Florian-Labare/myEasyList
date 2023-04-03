@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded", function(e) {
     const elementsToDelete = document.querySelectorAll('[data-productid]');
-    console.log(elementsToDelete);
     const deleteAllButton =  document.getElementById("delete-all");
     const formDelete = document.forms.namedItem("deleteAllProducts");
 
@@ -38,8 +37,8 @@ document.addEventListener("DOMContentLoaded", function(e) {
     formDelete.addEventListener(
         "submit",
         (event) => {
+            alert('Êtes-vous sûrs de vouloir tout supprimer ?')
             const outputDeleteAll = document.querySelector("#output-message-delete-all");
-
             const formData = new FormData(formDelete);
             const request = new XMLHttpRequest();
             request.open("POST", deleteAllButton.dataset['deleteurl'], true);

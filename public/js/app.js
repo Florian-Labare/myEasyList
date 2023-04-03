@@ -8143,7 +8143,6 @@ document.addEventListener("DOMContentLoaded", function (e) {
 
 document.addEventListener("DOMContentLoaded", function (e) {
   var elementsToDelete = document.querySelectorAll('[data-productid]');
-  console.log(elementsToDelete);
   var deleteAllButton = document.getElementById("delete-all");
   var formDelete = document.forms.namedItem("deleteAllProducts");
   Array.from(elementsToDelete).forEach(function (item) {
@@ -8172,6 +8171,7 @@ document.addEventListener("DOMContentLoaded", function (e) {
 
   // delete all products by category
   formDelete.addEventListener("submit", function (event) {
+    alert('Êtes-vous sûrs de vouloir tout supprimer ?');
     var outputDeleteAll = document.querySelector("#output-message-delete-all");
     var formData = new FormData(formDelete);
     var request = new XMLHttpRequest();

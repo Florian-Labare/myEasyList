@@ -93,6 +93,13 @@ class ProductController extends Controller
         ]);
     }
 
+    /**
+     * Edit product
+     *
+     * @param int $categoryId
+     * @param int $productId
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
     public function edit(int $categoryId, int $productId)
     {
         $product = Product::findById($productId);
@@ -188,10 +195,12 @@ class ProductController extends Controller
     }
 
     /**
+     * Add reference validity days
+     *
      * @param int $productId
      * @return JsonResponse
      */
-    public function addReferenceValidityDays(int $productId) : JsonResponse
+    public function addReferenceValidityDays(int $productId): JsonResponse
     {
         $product = Product::findById($productId);
         if(empty($product)){
@@ -210,11 +219,13 @@ class ProductController extends Controller
     }
 
     /**
+     * get percent to build progress bar with width css property
+     *
      * @param int|null $categoryId
      * @param int $productId
      * @return JsonResponse
      */
-    public function getProgressBarPercent(int $categoryId, int $productId) : JsonResponse
+    public function getProgressBarPercent(int $categoryId, int $productId): JsonResponse
     {
         $product = null;
         $products = Category::findById($categoryId)->products()->get();

@@ -8,6 +8,11 @@ use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
+    /**
+     * View home
+     *
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
     public function home(){
         $categories = Category::all();
         $lists = ShoppingList::all();

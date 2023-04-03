@@ -25,7 +25,7 @@ class Product extends Model
      *
      * @return BelongsTo
      */
-    public function category() : BelongsTo
+    public function category(): BelongsTo
     {
 
         return $this->belongsTo(Category::class);
@@ -37,19 +37,21 @@ class Product extends Model
      * @param integer $id
      * @return Product
      */
-    public static function findById(int $id) : ?Product
+    public static function findById(int $id): ?Product
     {
 
         return self::where('id', $id)->first();
     }
 
-    public static function findByName(string $name) : ?Product
+    public static function findByName(string $name): ?Product
     {
 
         return self::where('name', $name)->first();
     }
 
     /**
+     * Update item
+     *
      * @param string $name
      * @return void
      */
@@ -60,26 +62,32 @@ class Product extends Model
     }
 
     /**
+     * count days since the purchase date
+     *
      * @return int
      */
-    public function getDaysSincePurchase () : int
+    public function getDaysSincePurchase (): int
     {
 
         return Carbon::today()->diffInDays(Carbon::create($this->begin_date));
     }
 
     /**
+     * get percent
+     *
      * @return int
      */
-    public function getPercent() : int
+    public function getPercent(): int
     {
         return intval($this->getDaysSincePurchase() / $this->count_day * 100);
     }
 
     /**
+     * Determine statuses
+     *
      * @return string
      */
-    public function getStatus() : string
+    public function getStatus(): string
     {
 
        $percent = $this->getPercent();
@@ -98,10 +106,12 @@ class Product extends Model
     }
 
     /**
+     * Get not ok statuses for all products
+     *
      * @param array $statuses
      * @return array
      */
-    public static function getNotOkStatus(array $statuses) : array
+    public static function getNotOkStatus(array $statuses): array
     {
         $products = self::findAllByStatus($statuses);
         $displayProducts = [];
@@ -116,10 +126,12 @@ class Product extends Model
     }
 
     /**
+     * find item by status
+     *
      * @param array $statuses
      * @return array
      */
-    public static function findAllByStatus(array $statuses) : array
+    public static function findAllByStatus(array $statuses): array
     {
         $products = self::join('categories', 'products.category_id', '=', 'categories.id')
                         ->whereNull('categories.deleted_at')
@@ -136,6 +148,8 @@ class Product extends Model
     }
 
     /**
+     * add validity days
+     *
      * @param $addDays
      * @return void
      */
@@ -147,9 +161,11 @@ class Product extends Model
     }
 
     /**
+     * get remining days
+     *
      * @return int
      */
-    public function getRemainingDays() : int
+    public function getRemainingDays(): int
     {
 
         return $this->count_day - $this->getDaysSincePurchase();
