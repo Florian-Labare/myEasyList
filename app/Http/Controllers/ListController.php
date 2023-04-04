@@ -58,7 +58,7 @@ class ListController extends Controller
         }
 
         foreach ($categories as $category) {
-            $productsNamesByCategory = $category->products()->pluck('name')->toArray();
+            $productsNamesByCategory = $category->pluckProductsNames($category->id);
             foreach ($productsName as $productName) {
                 if(in_array($productName, $productsNamesByCategory)) {
                     $objProduct = Product::findByName($productName);
@@ -75,7 +75,11 @@ class ListController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified list in storage.
+     *
+     * @param Request $request
+     * @param int $listId
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, int $listId)
     {
@@ -92,6 +96,8 @@ class ListController extends Controller
     }
 
     /**
+     * Edit list
+     *
      * @param int $listId
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
@@ -102,7 +108,10 @@ class ListController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified list from storage.
+     *
+     * @param int $listId
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(int $listId)
     {
@@ -118,11 +127,13 @@ class ListController extends Controller
     }
 
     /**
+     * add product in specified list
+     *
      * @param Request $request
      * @param int $listId
      * @return \Illuminate\Http\JsonResponse
      */
-    public function addProductsTolist(Request $request, int $listId) : JsonResponse
+    public function addProductsTolist(Request $request, int $listId): JsonResponse
     {
         $list = ShoppingList::findById($listId);
         if(empty($list)) {
@@ -137,11 +148,13 @@ class ListController extends Controller
     }
 
     /**
+     * Merge product in specified list
+     *
      * @param Request $request
      * @param int $listId
      * @return \Illuminate\Http\JsonResponse
      */
-    public function mergeProductsToList(Request $request, int $listId) : JsonResponse
+    public function mergeProductsToList(Request $request, int $listId): JsonResponse
     {
         $list = ShoppingList::findById($listId);
         if(empty($list)) {

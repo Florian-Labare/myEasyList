@@ -48,12 +48,12 @@ class ProductController extends Controller
         $product =  null;
         if (empty($categoryId)) {
             $request->validate([
-                'products.*' => 'required|regex:/^([a-zA-Z0-9'.HelperAccent::ACCENT_LETTERS.']+)(\s[a-zA-Z0-9'.HelperAccent::ACCENT_LETTERS.']+)*$/|unique:products,name,NULL,id,deleted_at,NULL',
+                'products.*' => 'required|string|distinct|min:3|regex:/^([a-zA-Z0-9'.HelperAccent::ACCENT_LETTERS.']+)(\s[a-zA-Z0-9'.HelperAccent::ACCENT_LETTERS.']+)*$/|unique:products,name,NULL,id,deleted_at,NULL',
                 'category' => 'required|exists:categories,id',
             ]);
         } else {
             $request->validate([
-                'products.*' => 'required|regex:/^([a-zA-Z0-9'.HelperAccent::ACCENT_LETTERS.']+)(\s[a-zA-Z0-9'.HelperAccent::ACCENT_LETTERS.']+)*$/|unique:products,name,NULL,id,deleted_at,NULL',
+                'products.*' => 'required|string|distinct|regex:/^([a-zA-Z0-9'.HelperAccent::ACCENT_LETTERS.']+)(\s[a-zA-Z0-9'.HelperAccent::ACCENT_LETTERS.']+)*$/|unique:products,name,NULL,id,deleted_at,NULL',
             ]);
         }
 
@@ -96,6 +96,23 @@ class ProductController extends Controller
     /**
      * Edit product
      *
+     * @param int $categoryId
+     * @param int $productId
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function edit(int $categoryId, int $productId)
+    {
+        $product = Product::findById($productId);
+
+        return view('Product.editProduct', [
+            'categoryId' => $categoryId,
+            'product' => $product
+        ]);
+    }
+
+    /**
+     * Edit product
+     *
      * @param Request $request
      * @param int $categoryId
      * @param int $productId
@@ -103,11 +120,16 @@ class ProductController extends Controller
      */
     public function update(Request $request, int $categoryId, int $productId)
     {
-        $request->validate(['name' => 'required']);
+        $request->validate(['product' => 'required']);
         $product = Product::findById($productId);
-        $product->updateItem($request->name);
+        if(empty($product)) {
 
-        return redirect()->back()->with('success', 'le produit ' .$product->name. 'a bien été mis à jour' );
+            return redirect()->back()->with('error', 'Aucun produit n\'a été trouvée');
+        }
+
+        $product->updateItem($request->product);
+
+        return redirect()->route('products.category', ['categoryId' => $categoryId])->with('success', 'le produit ' .$product->name. 'a bien été mis à jour' );
     }
 
     /**
@@ -173,10 +195,12 @@ class ProductController extends Controller
     }
 
     /**
+     * Add reference validity days
+     *
      * @param int $productId
      * @return JsonResponse
      */
-    public function addReferenceValidityDays(int $productId)
+    public function addReferenceValidityDays(int $productId): JsonResponse
     {
         $product = Product::findById($productId);
         if(empty($product)){
@@ -195,11 +219,13 @@ class ProductController extends Controller
     }
 
     /**
+     * get percent to build progress bar with width css property
+     *
      * @param int|null $categoryId
      * @param int $productId
      * @return JsonResponse
      */
-    public function getProgressBarPercent(int $categoryId, int $productId)
+    public function getProgressBarPercent(int $categoryId, int $productId): JsonResponse
     {
         $product = null;
         $products = Category::findById($categoryId)->products()->get();

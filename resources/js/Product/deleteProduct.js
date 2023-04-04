@@ -1,38 +1,15 @@
 document.addEventListener("DOMContentLoaded", function(e) {
     const elementsToDelete = document.querySelectorAll('[data-productid]');
     const deleteAllButton =  document.getElementById("delete-all");
-    console.log(elementsToDelete);
+    const formDelete = document.forms.namedItem("deleteAllProducts");
 
     Array.from(elementsToDelete).forEach( item => {
         item.addEventListener('click', deleteProduct, )
     });
 
-    function deleteAllproducts(e) {
-        const outputDeleteAll = document.querySelector("#output-message-delete-all")
-        for(let i = 0; i < elementsToDelete.length; i++) {
-            const request = new XMLHttpRequest();
-            request.open("POST", elementsToDelete[i].dataset['urldelete'], true);
-            request.onload = () => {
-
-                outputDeleteAll.classList.remove('hidden')
-                setTimeout(() => {
-                    outputDeleteAll.innerHTML = "Error : Time out"
-                    outputDeleteAll.classList.add('hidden')
-                }, 3000);
-
-                outputDeleteAll.innerHTML =
-                    request.status === 200
-                        ? "Produits supprimés avec succès"
-                        : `Error ${request.status} un problème est survenu lors de la suppression.<br />`;
-            };
-
-            request.send(e.target);
-            e.preventDefault();
-        }
-    }
-    deleteAllButton.addEventListener('click', deleteAllproducts);
-
+    // delete product by id
     function deleteProduct(e){
+        console.log(e.target.dataset['urldelete']);
         const outputDelete = document.querySelector("#output-message-delete");
         const request = new XMLHttpRequest();
         request.open("POST", e.target.dataset['urldelete'], true);
@@ -55,5 +32,37 @@ document.addEventListener("DOMContentLoaded", function(e) {
         request.send(e.target);
         e.preventDefault();
     }
+
+    // delete all products by category
+    formDelete.addEventListener(
+        "submit",
+        (event) => {
+            alert('Êtes-vous sûrs de vouloir tout supprimer ?')
+            const outputDeleteAll = document.querySelector("#output-message-delete-all");
+            const formData = new FormData(formDelete);
+            const request = new XMLHttpRequest();
+            request.open("POST", deleteAllButton.dataset['deleteurl'], true);
+            request.onload = (progress) => {
+
+                outputDeleteAll.classList.remove('hidden')
+                setTimeout(() => {
+                    outputDeleteAll.innerHTML = "Error : Time out"
+                    outputDeleteAll.classList.add('hidden')
+                }, 3000);
+
+                document.getElementById('container-table-products').remove();
+                deleteAllButton.remove();
+
+                outputDeleteAll.innerHTML =
+                    request.status === 200
+                        ? "Produits supprimés"
+                        :  `Error ${request.status} problème lors de la suppression de tous les produits.<br />`;
+            };
+
+            request.send(formData);
+            event.preventDefault();
+        },
+        false
+    );
 
 });

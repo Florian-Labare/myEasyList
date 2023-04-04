@@ -43,11 +43,13 @@ class Category extends Model
     }
 
     /**
+     * get all products with not ok statuses in category
+     *
      * @param int $categoryId
      * @param array $statuses
      * @return array
      */
-    public static function getProductWithNotOkStatusByCategory(int $categoryId, array $statuses) : array
+    public static function getProductWithNotOkStatusByCategory(int $categoryId, array $statuses): array
     {
         $category =  self::findById($categoryId);
         $products = $category->products()->get();
@@ -61,6 +63,19 @@ class Category extends Model
         }
 
         return $displayProducts;
+    }
+
+    /**
+     * array products names
+     *
+     * @param int $categoryId
+     * @return array
+     */
+    public function pluckProductsNames(int $categoryId): array
+    {
+        $category =  self::findById($categoryId);
+
+        return $category->products()->pluck('name')->toArray();
     }
 
 }

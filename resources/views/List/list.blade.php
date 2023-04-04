@@ -14,7 +14,7 @@
                 {{ session('error') }}
             </div>
         @endif
-        <h3 class="ml-5 mt-10 mb-4 text-4xl leading-none tracking-tight text-left text-gray-500 md:text-5xl lg:text-6xl dark:text-white p-6">{{$list->title}}</h3>
+        <h3 class="mt-10 mb-4 text-4xl leading-none tracking-tight text-left text-gray-500 md:text-5xl lg:text-6xl dark:text-white ">{{$list->title}}</h3>
         <div id="success-output" class="hidden p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert"></div>
         @if(empty($triProductsByCategory))
             <div id="alert-4" class="alert-empty-products flex p-4 mb-4 mt-6 text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300" role="alert">

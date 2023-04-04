@@ -23,24 +23,23 @@
                                     @csrf
                                     <div class="wrapper md:col-span-5">
                                         <div id="survey_options">
-                                            <label for="products">Nom du produit</label>
-                                            <input type="text" name="products[]" class="h-10 border mt-1 rounded px-4 w-full bg-gray-50" value="" />
-                                            <div class="controls flex mt-3">
-                                                <a href="#" id="add_more_fields">
-                                                    <svg class="h-8 w-8 text-purple-700"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                                        <path stroke="none" d="M0 0h24v24H0z"/>
-                                                        <line x1="12" y1="5" x2="12" y2="19" />
-                                                        <line x1="5" y1="12" x2="19" y2="12" />
-                                                    </svg>
-                                                </a>
-                                                <a href="#" id="remove_fields">
-                                                    <svg class="h-8 w-8 text-red-500"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                                        <path stroke="none" d="M0 0h24v24H0z"/>
-                                                        <line x1="5" y1="12" x2="19" y2="12" />
-                                                    </svg>
-                                                </a>
-                                            </div>
+                                            <input type="text" name="products[]" class="h-10 border mt-1 rounded px-4 w-full bg-gray-50" value="" placeholder="Nom du produit"/>
                                         </div>
+                                    </div>
+                                    <div class="controls flex">
+                                        <a href="#" id="add_more_fields">
+                                            <svg class="h-8 w-8 text-purple-700"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z"/>
+                                                <line x1="12" y1="5" x2="12" y2="19" />
+                                                <line x1="5" y1="12" x2="19" y2="12" />
+                                            </svg>
+                                        </a>
+                                        <a href="#" id="remove_fields">
+                                            <svg class="h-8 w-8 text-red-500"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z"/>
+                                                <line x1="5" y1="12" x2="19" y2="12" />
+                                            </svg>
+                                        </a>
                                     </div>
                                     @if(\Illuminate\Support\Facades\Route::currentRouteName() == 'product.create')
                                         <div class="md:col-span-5">
@@ -83,7 +82,8 @@
                const newField = document.createElement('input');
                newField.setAttribute('type','text');
                newField.setAttribute('name','products[]');
-               newField.setAttribute('class','h-10 border mt-1 mb-3 rounded px-4 w-full bg-gray-50');
+               newField.setAttribute('placeholder','Nom du produit');
+               newField.setAttribute('class','h-10 border mt-1 mt-3 rounded px-4 w-full bg-gray-50');
                survey_options.appendChild(newField);
            }
 

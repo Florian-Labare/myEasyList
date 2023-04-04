@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Enum\HelperAccent;
 use App\Models\Category;
+use App\Models\Product;
+use App\Models\ShoppingList;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
@@ -12,6 +15,7 @@ class CategoryController extends Controller
      * Insert Category
      *
      * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse|string
      */
     public function store(Request $request)
     {
@@ -61,6 +65,40 @@ class CategoryController extends Controller
         $category->delete();
 
         return redirect()->route('home');
+    }
+
+    /**
+     * Delet all products in category
+     *
+     * @param int $categoryId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function deleteAllCategoryProducts(int $categoryId): JsonResponse
+    {
+        $category = Category::findById($categoryId);
+        $lists = ShoppingList::all();
+        $productsNames = $category->pluckProductsNames($categoryId);
+
+        if(empty($category)) {
+
+            return response()->json(['error' => 'Aucune catégorie n\'a été trouvée'], 404);
+        }
+
+        $products = $category->products()->get();
+        foreach ($products as $product) {
+            $product->delete();
+        }
+
+        foreach ($lists as $list) {
+            foreach ($productsNames as $name) {
+                if(in_array($name, $list->products_data)) {
+                    $list->products_data = [];
+                    $list->save();
+                }
+            }
+        }
+
+        return response()->json(['success' => 'produits supprimés']);
     }
 
 }
