@@ -75,7 +75,7 @@ class Category extends Model
     {
         $category =  self::findById($categoryId);
 
-        return $category->products()->pluck('name')->toArray();
+        return $category->products()->pluck('name')->whereNull('deleted_at')->toArray();
     }
 
 }

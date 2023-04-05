@@ -49,7 +49,6 @@ class ListController extends Controller
         $triProductsByCategory = [];
         $categories = Category::all();
         $productsName = @$list->products_data;
-
         if(empty($productsName)) {
 
             return view('List.list', [

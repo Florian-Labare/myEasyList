@@ -78,24 +78,32 @@ class CategoryController extends Controller
         $category = Category::findById($categoryId);
         $lists = ShoppingList::all();
         $productsNames = $category->pluckProductsNames($categoryId);
+        $result = [];
 
         if(empty($category)) {
 
             return response()->json(['error' => 'Aucune catégorie n\'a été trouvée'], 404);
         }
 
-        $products = $category->products()->get();
-        foreach ($products as $product) {
-            $product->delete();
-        }
-
         foreach ($lists as $list) {
             foreach ($productsNames as $name) {
                 if(in_array($name, $list->products_data)) {
-                    $list->products_data = [];
-                    $list->save();
+                    foreach ($list->products_data as $listProduct) {
+                       if ($name == $listProduct) {
+                           $result = array_filter($list->products_data, static function ($element) use ($listProduct) {
+                              return $element !== $listProduct;
+                           });
+                       }
+                       $list->products_data = $result;
+                       $list->save();
+                    }
                 }
             }
+        }
+
+        $products = $category->products()->get();
+        foreach ($products as $product) {
+            $product->delete();
         }
 
         return response()->json(['success' => 'produits supprimés']);

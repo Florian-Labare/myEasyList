@@ -10,7 +10,7 @@ class ShoppingList extends Model
     use HasFactory;
 
     protected $table = 'lists';
-    protected $fillable = ['products'];
+    protected $fillable = ['products_data'];
 
     /**
      * The attributes that should be cast.
